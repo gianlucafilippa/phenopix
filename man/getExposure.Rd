@@ -29,6 +29,12 @@ getExposure(ipath, coords, train.data=FALSE, date.code, sample=NULL)
   If NULL (default) all images in the folder are processed, otherwise an integer specifying how many files must be processed. 
   This is useful if you want to check some extractions without processing the whole folder.   
 }
+  \item{begin}{
+  The user can provide a beginning date as a character string in the form 'YYYY-MM-DD'. Images 
+  with a time stamp earlier than the provided date will be discarded. Default is NULL and the whole
+  time series will be processed. Useful when updating an existing time series.
+%%     ~~Describe \code{plot} here~~
+}
 }
 \details{
 This function performs a simplified OCR procedure to recognize numbers in a binary image. To do so, a full RGB image is first converted in binary (b/w) internally. Then the coordinates to crop the Exposure record are retrieved with \code{getCoords()} and, finally, the computation is done with \code{getExposure}. Before doing so you have to train the OCR with sample numbers. See \code{trainOCR()} for details. The procedure is based on simple matrix matching. The Exposure string is splitted into the digits that constitute it and then each digit is compared to the samples from the training. Finally, a dataframe is extracted with filenames in the first column, exposure in the second one and a POSIX vector in the third. 

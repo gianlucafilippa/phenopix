@@ -18,7 +18,7 @@ extractVIs(img.path, roi.path, vi.path = NULL, roi.name = NULL,
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{img.path}{
-  Path to images
+  Path to image folder, or a vector with all image files (full path mandatory) 
 %%     ~~Describe \code{img.path} here~~
 }
   \item{roi.path}{
