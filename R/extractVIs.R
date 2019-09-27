@@ -4,11 +4,9 @@ extractVIs <- function(img.path,roi.path,vi.path=NULL,roi.name=NULL,plot=TRUE, b
   load(paste(roi.path,'/roi.data.Rdata',sep=''))
   if (is.null(roi.name)) {    
     roi.name <- names(roi.data)        
-  } 
-  
+  }   
   roi.pos <- which(names(roi.data) %in% roi.name == TRUE)
-  
-  files <-list.files(path=img.path,recursive=TRUE, pattern = file.type)
+  if (length(img.path)==1)  files <-list.files(path=img.path,recursive=TRUE, pattern = file.type) else files <- img.path
   n_files <-length(files)
   dates <- as.POSIXct(sapply(files, extractDateFilename, date.code=date.code), origin='1970-01-01')
   if (any(is.na(dates))) stop(paste('Something wrong in your date!'))
