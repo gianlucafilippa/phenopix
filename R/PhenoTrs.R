@@ -83,7 +83,8 @@ function(
     greenup[ratio.deriv < 0] <- FALSE
     return(greenup)
 }
-	greenup <- .Greenup(ratio)
+	greenup <- .Greenup(ratio) & index(ratio) < pop
+	senescence <- !.Greenup(ratio) & index(ratio) >= pop
 			
 	# select time where SOS and EOS are located (around trs value)
 	bool <- ratio >= trs.low & ratio <= trs.up
@@ -91,7 +92,7 @@ function(
 	# get SOS, EOS, LOS
 	soseos <- index(x)
 	sos <- round(median(soseos[greenup & bool], na.rm=TRUE))
-	eos <- round(median(soseos[!greenup & bool], na.rm=TRUE))
+	eos <- round(median(soseos[senescence & bool], na.rm=TRUE))
 	los <- eos - sos
 	los[los < 0] <- n + (eos[los < 0] - sos[los < 0])
 	
