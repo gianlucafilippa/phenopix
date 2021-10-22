@@ -1,11 +1,7 @@
 extractDateFilename <- function(filename, date.code){
-	n.underscores <- length(gregexpr('_', filename)[[1]])
-	n.underscores.date.code <- length(gregexpr('_', date.code)[[1]])
-	if (n.underscores.date.code==1 & gregexpr('_', date.code)[[1]][1]==-1) n.underscores.date.code <- 0
-	pos.underscores <- gregexpr('_', filename)[[1]] 	  	
- 	pos.underscore <- gregexpr('_', filename)[[1]][n.underscores-n.underscores.date.code]	
- 	filename.cleaned <- substr(filename, pos.underscore+1, nchar(filename))
- 	# separated <- str_split(filename.cleaned, '')[[1]][-1]
+	code <- stringr::str_replace_all(date.code,"[[:alpha:]]","\\\\d")
+  	file <- basename(filename)
+  	filename.cleaned <- stringr::str_extract_all(file, pattern = code)[[1]]
  	separated <- str_split(filename.cleaned, '')[[1]]	
  	year.char <- ifelse(length(gregexpr('y', date.code)[[1]]) == 2, '%y', '%Y')
  	year.pos <- unlist(gregexpr('y', date.code)[[1]])
@@ -18,10 +14,13 @@ extractDateFilename <- function(filename, date.code){
  	hour.val <- ifelse(hour.pos[1] > 0, paste(separated[hour.pos], collapse=''), '12')
  	min.pos <- unlist(gregexpr('M', date.code)[[1]])
  	min.val <- ifelse(min.pos[1] > 0, paste(separated[min.pos], collapse=''), '00')
+	sec.char <- ifelse(length(gregexpr('S', date.code)[[1]]) == 2, ':%S', NA)
+  	sec.pos <- unlist(gregexpr('S', date.code)[[1]])
+  	sec.val <- ifelse(sec.pos[1] > 0, paste(separated[sec.pos], collapse=''), '00')
  	final.date <- paste(year.val, month.val, day.val, sep='-')
- 	final.time <- paste(hour.val, min.val, sep=':')
+ 	final.time <- paste(hour.val, min.val, sec.val,sep=':')
  	final.datetime <- paste(final.date, final.time)
- 	final.format <- paste0(year.char,'-%m-%d %H:%M')
+ 	final.format <- ifelse(!is.na(sec.char),paste0(year.char,'-%m-%d %H:%M',sec.char),paste0(year.char,'-%m-%d %H:%M'))
  	date <- as.POSIXct(strptime(final.datetime, format=final.format))
  #    string_length <- nchar(filename.cleaned)
 	# string_split <-suppressWarnings(as.numeric(str_split_fixed(filename.cleaned,"", string_length+1)))
